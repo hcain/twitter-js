@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 var tweetBank = require('../tweetBank');
 var bodyParser = require('body-parser');
-
-
+var db = require('../db');
+var client = db.client;
+var tweetQuery = 'SELECT users.name AS name, tweets.content AS content, users.id AS userid, tweets.id AS tweetid FROM tweets JOIN users ON tweets.userid = users.id';
 
 
 
@@ -12,16 +13,41 @@ var bodyParser = require('body-parser');
 //  res.sendFile('/stylesheets/style.css', {root: __dirname + '/../public/'});
 //})
 
+
+
 module.exports = function(io){
   router.get('/users/:name', function(req,res){
     var tweets = tweetBank.find({'name':req.params.name});
     res.render('index', {tweets: tweets , showForm: true, defaultName: req.params.name});
-  })
+  });
 
   router.get('/', function(req, res){
-    var tweets = tweetBank.list();
-    res.render( 'index', {tweets: tweets , showForm: true, defaultName: ''});
-  })
+    // console.log('home');
+    // console.log(typeof client, client);
+    client.query(tweetQuery, function(error, results){
+        if (error){return error;}
+        var dbTweets = results.rows;
+        // console.log(dbTweets);
+        var tweets = tweetBank.addData(dbTweets);
+        // var followees = tweetBank.followees;
+        console.log(typeof followees, followees);
+        // console.log('\n\n\n\n\n');
+        // console.log(tweets);
+        res.render( 'index', {tweets: tweets , followees: followees, showForm: true, defaultName: ''});
+    });
+  });
+
+  router.get('/generate', function(req, res) {
+    tweetBank.generateData();
+    res.redirect('/');
+    }
+  );
+
+  router.get('/clear', function(req, res) {
+    tweetBank.clearData();
+    res.redirect('/');
+    }
+  );
 
   router.get('/tweets/:id', function(req,res){
     var tweets = tweetBank.list();
