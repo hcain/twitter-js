@@ -4,7 +4,6 @@ var data = [];
 
 function add (name, content, id) {
   data.push({ name: name, content: content });
-  console.log(name);
 }
 
 function list () {
@@ -14,24 +13,20 @@ function list () {
 
 function uniques (){
   var uniqueNames = [];
-  console.log(data);
 
   data.forEach(function(o){
    // console.log(o)
  //   uniqueNames.push(o.name);
   if(_.indexOf(uniqueNames, o.name) === -1){
       uniqueNames.push(o.name);
-      console.log(o.name);
   }
   })
-  console.log(uniqueNames.length);
   data.uniques = uniqueNames.length;
 
 }
 
 
 function find (properties) {
-  console.log(data);
   return _.cloneDeep(_.filter(data, properties));
 }
 
