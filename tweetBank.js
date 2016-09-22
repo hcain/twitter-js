@@ -13,7 +13,7 @@ function list () {
 
 function uniques (){
   var uniqueNames = [];
-
+  
   data.forEach(function(o){
    // console.log(o)
  //   uniqueNames.push(o.name);
@@ -22,7 +22,6 @@ function uniques (){
   }
   })
   data.uniques = uniqueNames.length;
-
 }
 
 
@@ -50,3 +49,4 @@ var getFakeTweet = function() {
 for (var i = 0; i < 50; i++) {
   module.exports.add( getFakeName(), getFakeTweet() );
 }
+testing branch
